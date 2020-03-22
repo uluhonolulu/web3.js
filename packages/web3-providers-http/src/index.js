@@ -25,6 +25,7 @@
 var errors = require('web3-core-helpers').errors;
 var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
 var http = require('http');
+var axios = require('axios');
 var https = require('https');
 
 
@@ -93,32 +94,40 @@ HttpProvider.prototype._prepareRequest = function(){
  * @param {Function} callback triggered on end with (err, result)
  */
 HttpProvider.prototype.send = function (payload, callback) {
-    var _this = this;
-    var request = this._prepareRequest();
+    // var _this = this;
+    // var request = this._prepareRequest();
 
-    request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1 && request.status === 200) {
-            var result = request.responseText;
-            var error = null;
+    // request.onreadystatechange = function() {
+    //     if (request.readyState === 4 && request.timeout !== 1 && request.status === 200) {
+    //         var result = request.responseText;
+    //         var error = null;
 
-            try {
-                result = JSON.parse(result);
-            } catch(e) {
-                error = errors.InvalidResponse(request.responseText);
-            }
+    //         try {
+    //             result = JSON.parse(result);
+    //         } catch(e) {
+    //             error = errors.InvalidResponse(request.responseText);
+    //         }
 
-            _this.connected = true;
-            callback(error, result);
-        }
-    };
+    //         _this.connected = true;
+    //         callback(error, result);
+    //     }
+    // };
 
-    request.ontimeout = function() {
-        _this.connected = false;
-        callback(errors.ConnectionTimeout(this.timeout));
-    };
+    // request.ontimeout = function() {
+    //     _this.connected = false;
+    //     callback(errors.ConnectionTimeout(this.timeout));
+    // };
 
     try {
-        request.send(JSON.stringify(payload));
+        axios.post(this.host, payload)
+            .then(response => {
+                callback(null, response.body)
+            })
+            .catch(e => {
+                console.error(e)
+                callback(errors.InvalidResponse(e))
+            })
+        // request.send(JSON.stringify(payload));
     } catch(error) {
         this.connected = false;
         callback(errors.InvalidConnection(this.host));
