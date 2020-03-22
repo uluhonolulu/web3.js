@@ -96,7 +96,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     var request = this._prepareRequest();
 
     request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
+        if (request.readyState === 4 && request.timeout !== 1 && request.status === 200) {
             var result = request.responseText;
             var error = null;
 
