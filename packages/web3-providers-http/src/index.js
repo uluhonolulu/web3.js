@@ -121,6 +121,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     try {
         axios.post(this.host, payload)
             .then(response => {
+                console.log(response.body)
                 callback(null, response.body)
             })
             .catch(e => {
