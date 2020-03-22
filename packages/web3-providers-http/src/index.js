@@ -32,6 +32,7 @@ var https = require('https');
  * HttpProvider should be used to send rpc calls over http
  */
 var HttpProvider = function HttpProvider(host, options) {
+    console.log('CUSTOM WEB3.JS')
     options = options || {};
 
     this.withCredentials = options.withCredentials || false;
