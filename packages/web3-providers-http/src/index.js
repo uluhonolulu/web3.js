@@ -125,7 +125,7 @@ HttpProvider.prototype.send = function (payload, callback) {
             })
             .catch(e => {
                 console.error(e)
-                callback(errors.InvalidResponse(e))
+                callback(errors.InvalidResponse(""))
             })
         // request.send(JSON.stringify(payload));
     } catch(error) {
